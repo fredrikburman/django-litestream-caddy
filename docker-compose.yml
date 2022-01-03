@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./web
+    container_name: web
+    volumes:
+      - ./web/:/usr/src/app/
+    ports:
+      - 8000:8000
+    env_file: .env
+  caddy:
+    image: caddy/caddy:2.4.6-alpine
+    container_name: caddy-service
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - $PWD/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/caddy/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
+
